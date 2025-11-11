@@ -1,152 +1,147 @@
-# Reglas completas del juego – API Kombat
+# How to Play – API Kombat
 
-## Objetivo del juego
+## Objective
 
-Ser el primer jugador en colocar **4 aspectos saludables** en su tablero. Un aspecto está saludable cuando **no es vulnerable**.
+Be the first player to place **four healthy aspects** on your board. An aspect is healthy when it is **not vulnerable**.
 
-## Componentes del juego
+## Game components
 
-### Jugadores
+### Players
 
-- 2 jugadores: `Tú` vs `IA`.
-- Cada jugador dispone de:
-  - Una mano de cartas (sin límite, aunque al finalizar el turno se vuelve a 3 cartas).
-  - Un tablero con 4 espacios de aspecto.
-  - Un escudo de **Code Freeze** (se activa con una carta especial).
+- Two competitors: **You** versus the **AI**.
+- Each player controls:
+  - A hand of cards (no hard limit; you draw back to three cards at the end of the turn).
+  - A board with **four aspect slots**.
+  - An optional **Code Freeze** shield activated via a special card.
 
-### Mazo de cartas (89)
+### Deck breakdown (89 cards)
 
-1. **Aspectos (Scoring)** – 17 cartas  
-   - 4 copias de cada color: Seguridad, Documentación, Gobierno y Performance.  
-   - 1 carta multicolor (*Wildcard*).
+1. **Aspects (Scoring)** – 17 cards  
+   - Four copies of each color: Security, Documentation, Governance, Performance.  
+   - One multicolor wildcard.
 
-2. **Ataques y Problemas** – 29 cartas  
-   - 16 cartas de ataque de Seguridad (4× DoS, SQL Injection, OWASP, Brute-Force).  
-   - 12 cartas de Problema (4× Documentación, Gobierno, Performance).  
-   - 1 carta multicolor (Ataque/Problema).
+2. **Attacks & Problems** – 29 cards  
+   - 16 security attacks (4× DoS, SQL Injection, OWASP, Brute-Force).  
+   - 12 problems (4× Documentation, Governance, Performance).  
+   - One multicolor attack/problem wildcard.
 
-3. **Protecciones** – 29 cartas  
-   - 16 cartas de protección de Seguridad (4× OAuth2/JWT, HTTPS/SSL, Validación de Entrada, Rate Limiting).  
-   - 12 cartas de protección genérica (4× Documentación, Gobierno, Performance).  
-   - 1 carta multicolor (Protección).
+3. **Protections** – 29 cards  
+   - 16 security protections (4× OAuth2/JWT, HTTPS/SSL, Input Validation, Rate Limiting).  
+   - 12 generic protections (4× Documentation, Governance, Performance).  
+   - One multicolor protection wildcard.
 
-4. **Intervenciones** – 14 cartas  
-   - 4× Refactoring, 4× Migración, 4× Activo-Activo.  
+4. **Interventions** – 14 cards  
+   - 4× Refactoring, 4× Migration, 4× Active-Active.  
    - 1× Code Freeze, 1× Rollback.
 
-## Estados de los aspectos
+## Aspect states
 
-1. **Vulnerable**  
-   - Un ataque destruye el aspecto si vuelve a impactar.  
-   - Visible mediante marcadores de alerta.
+1. **Vulnerable** – the next attack destroys the aspect; marked visually with alerts.  
+2. **Protections** *(0–2)*  
+   - **0**: unprotected.  
+   - **1**: shielded (blocks attacks).  
+   - **2**: fortified (blocks attacks and cannot be targeted by Active-Active).
 
-2. **Protecciones** (`0-2`)  
-   - **0**: sin protección.  
-   - **1**: protegido (bloquea ataques).  
-   - **2**: fortalecido (bloquea ataques y no puede sufrir Activo-Activo).
+## Card types and effects
 
-## Tipos de cartas y efectos
+### Aspects (`aspecto` / `scoring`)
+- Place a new aspect on your board.  
+- No duplicate colors; max four aspects.  
+- Multicolor cards resolve to the first missing color.  
+- Every aspect enters healthy (not vulnerable, 0 protections).
 
-### Aspectos (`aspecto` / `scoring`)
-- Coloca un nuevo aspecto en tu tablero.
-- No puedes duplicar color ni superar los 4 aspectos.
-- Las cartas multicolor adopta el primer color disponible.
-- Siempre entran saludables (no vulnerables, 0 protecciones).
+### Attacks & Problems (`ataque`, `problema`, `virus`)
+- Target the opponent’s board.  
+- Code Freeze cancels the attack and is consumed.  
+- Protections ≥1 block the effect.  
+- If the target aspect is healthy → it becomes vulnerable.  
+  If it is already vulnerable → it is destroyed.
 
-### Ataques y Problemas (`ataque`, `problema`, `virus`)
-- Se dirigen al tablero rival.
-- Code Freeze bloquea el ataque y se consume.
-- Las protecciones ≥1 impiden el efecto.
-- Si el aspecto objetivo está saludable → pasa a vulnerable.  
-  Si ya está vulnerable → se destruye.
+### Protections (`proteccion`, `medicina`)
+- Target your own aspects.  
+- If vulnerable, the protection heals it first.  
+- Then raise the protection level up to two.
 
-### Protecciones (`proteccion`, `medicina`)
-- Objetivo: tus propios aspectos.
-- Si está vulnerable, primero lo cura.
-- Incrementa protección hasta un máximo de 2.
+### Interventions (`intervencion`, `tratamiento`)
 
-### Intervenciones (`intervencion`, `tratamiento`)
+**Migration (`migracion` / `ladrón`)**  
+Steal an aspect your foe controls and you do not. States (vulnerability/protections) are kept. Code Freeze blocks it.  
+Restriction: the opponent must own at least one aspect you are missing; if you specify a color, it must exist.
 
-**Migración (ladrón/migracion)**  
-Roba un aspecto que el rival tenga y tú no. Mantiene vulnerabilidad y protecciones. Code Freeze lo bloquea.  
-Restricciones: el rival debe poseer un aspecto que te falte y, si apuntas a un color específico, debe existir.
+**Refactoring (`refactoring` / `trasplante`)**  
+Swap one of your aspects with one from the opponent. You may target a specific color. States are preserved. Code Freeze blocks it.  
+Restriction: both players must control at least one aspect.
 
-**Refactoring (trasplante/refactoring)**  
-Intercambia un aspecto tuyo con uno rival. Puede apuntar a un color concreto. Mantiene estados. Code Freeze lo bloquea.  
-Requiere que ambos tengan al menos un aspecto.
+**Active-Active (`activo_activo` / `contagio`)**  
+Expose an opponent aspect that matches a vulnerable aspect you already have. Fails if the target is fortified or already vulnerable. Code Freeze blocks it.
 
-**Activo-Activo (activo_activo/contagio)**  
-Vulnera un aspecto rival que coincida con uno tuyo vulnerable. No funciona si el objetivo está fortalecido o ya vulnerable. Code Freeze lo bloquea.
+**Code Freeze (`code_freeze` / `guante`)**  
+Activates a shield that blocks the next attack/intervention that would affect you. The shield is consumed after blocking.
 
-**Code Freeze (code_freeze/guante)**  
-Activa un escudo que bloquea el próximo ataque/intervención que realmente te afectaría. El escudo se consume al bloquear.
+**Rollback (`rollback` / `error`)**  
+Reduce an opponent aspect’s protection by 1. Requires the target to have protection ≥1. Code Freeze blocks it.
 
-**Rollback (rollback/error)**  
-Reduce en 1 la protección de un aspecto rival. Code Freeze lo bloquea. Debe existir un objetivo con protección ≥1.
+## Turn flow
 
-## Flujo del juego
+1. **Setup**: shuffle the full deck, deal three cards to each player, randomly choose who starts.  
+2. **Turn phase** – on your turn you may:
+   - **Play a card** (if valid, resolve its effect and end your turn).  
+   - **Discard** one or more cards (end your turn).  
+   - **Pass** (if you cannot or prefer not to play/discard).  
+3. **End of turn**: draw back to three cards. If the deck runs out, recycle the discard pile.  
+4. **Victory check**: if someone controls four healthy aspects, that player immediately wins.
 
-1. **Preparación**: se baraja el mazo, se reparten 3 cartas a cada jugador y se decide quién inicia.  
-2. **Turno** – el jugador elige:
-   - **Jugar una carta** (si es válida, aplica el efecto y pasa el turno).  
-   - **Descartar** una o varias cartas (pasa el turno).  
-   - **Pasar** (si no puede o no quiere jugar/descartar).  
-3. **Fin del turno**: roba hasta tener 3 cartas. Si el mazo se agota, recicla el descarte.  
-4. **Verificación de victoria**: si algún jugador tiene 4 aspectos saludables, gana inmediatamente.
+## Wildcards (multicolor)
 
-## Cartas multicolor (Wildcards)
+- **Aspect wildcards**: resolve to the first color you don’t control.  
+- **Attack/problem wildcards**: target the first opponent aspect without protection.  
+- **Protection wildcards**: attach to the first aspect you control.
 
-- **Aspectos**: toman el primer color que no tengas.  
-- **Ataques/Problemas**: buscan el primer aspecto rival sin protección.  
-- **Protecciones**: se asignan al primer aspecto disponible del jugador.
+## Discard recycle
 
-## Reciclaje del descarte
+When the deck is empty, shuffle the entire discard pile and use it as the new deck.
 
-Cuando el mazo se queda sin cartas:
-1. Baraja todo el descarte.
-2. Ese mazo reciclado pasa a ser el nuevo mazo principal.
-
-## Estados especiales
+## Special states
 
 ### Code Freeze
-- Se activa con la carta homónima.
-- Bloquea el siguiente ataque/intervención que te afecte.
-- Se consume tras bloquear.
+- Activated by the card of the same name.  
+- Blocks the next hostile action affecting you.  
+- Consumed once it blocks successfully.
 
-### Protecciones
-- 1: protege frente a ataques.  
-- 2: protege y evita efectos de Activo-Activo.  
-- Nunca superan el nivel 2.
+### Protections
+- Level 1: shields against attacks.  
+- Level 2: shields and prevents Active-Active.  
+- Cannot exceed level 2.
 
-### Vulnerabilidad
-- Un ataque posterior destruye el aspecto.
-- Puede eliminarse aplicando protección.
+### Vulnerability
+- A second hit will destroy the aspect.  
+- Can be cleared by applying a protection.
 
-## Condiciones de victoria
+## Victory conditions
 
-### Victoria
-- Al alcanzar 4 aspectos saludables.  
-- Si ambos llegan simultáneamente, gana quien lo logró primero.
+### Win
+- Reach four healthy aspects.  
+- If both players reach it simultaneously, the first to achieve it wins.
 
-### Empate / Bloqueo
-- Tras 50 turnos sin jugadas válidas, la partida se declara bloqueada.
+### Stalemate / Blocked game
+- After 50 consecutive turns without valid plays, declare a stalemate.
 
-## Restricciones generales
+## Global restrictions
 
-1. **Límite de aspectos**: máximo 4 y únicos por color.  
-2. **Mano**: sin límite superior; al final del turno vuelve a 3 cartas si hay mazo.  
-3. **Validación**: las cartas solo se juegan si cumplen sus condiciones.  
-4. **Orden de efectos**: se resuelven al instante; si fallan, la carta ya ha sido jugada.
+1. **Aspect limit**: four maximum, one per color.  
+2. **Hand size**: no cap; draw back to three cards at turn end if possible.  
+3. **Play validation**: a card must satisfy its constraints to be played.  
+4. **Effect order**: effects resolve immediately; if they fail, the card is still spent.
 
-## Notas técnicas
+## Technical notes
 
-- Turnos alternos humanos/IA.
-- Siempre hay opción de jugar, descartar o pasar.
-- El descarte se recicla automáticamente.
-- La verificación de victoria ocurre tras cada acción.
-- Los efectos son atómicos: o se aplican completamente, o no se aplican.
+- Turns alternate between human and AI.  
+- Every turn you can play, discard, or pass.  
+- The discard pile recycles automatically.  
+- Victory is checked after each action.  
+- Card effects are atomic: they either complete fully or not at all.
 
 ---
 
-**Fin de las reglas.**
+**End of the how-to-play guide.**
 
