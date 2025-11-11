@@ -18,20 +18,26 @@ Welcome to the main repository of the APIKOMBAT project. Here you will find the 
   - `assets/` – Art and audio resources: card backs, icons, fonts, and SFX, plus usage notes (`README.txt`).
   - `scripts/` – Utilities to generate or refresh assets from the data files.
   - `requirements.txt` – Python dependencies required to run the game client (`pygame`, `pandas`, `numpy`, etc.).
-  - `run_game.sh` and `run_api_game.sh` – Convenience scripts to activate the virtualenv and launch the interface.
-  - `venv/` – Optional pre-populated virtual environment (you can recreate it with `python -m venv venv && source venv/bin/activate`).
+  - `run_api_game.sh` and `run_game.sh` – Launch scripts (see differences below).
+  - `venv/` – Local virtual environment directory (ignored by Git); create it yourself if you prefer to keep dependencies isolated.
 - `LICENSE` – Project license.
 
 ## Getting started
 
-1. Install the dependencies (either inside `virus-game/venv` or using your own virtual environment):
+1. Recommended: use the helper script to activate your `venv/` (if present), install the minimal runtime dependencies, and launch the GUI:
+   ```bash
+   cd /Users/rafagranados/Develop/apikombat/virus-game
+   ./run_api_game.sh
+   ```
+   Any arguments you pass after the script name are forwarded to `python3 virus_game.py`.
+2. Manual setup (if you prefer to manage the environment yourself):
    ```bash
    cd /Users/rafagranados/Develop/apikombat/virus-game
    python3 -m venv venv
    source venv/bin/activate
    pip install -r requirements.txt
    ```
-2. Launch the GUI:
+3. Launch the GUI directly once dependencies are installed:
    ```bash
    python virus_game.py
    ```
@@ -47,5 +53,10 @@ Welcome to the main repository of the APIKOMBAT project. Here you will find the 
 - See `virus-game/api-card-game/README.md` for technical notes on the MTG engine adaptation.
 
 Keep this README updated whenever new modules, assets, or documentation land in the repository.
+
+## Launch scripts overview
+
+- `./run_api_game.sh` – Uses your current Python 3 interpreter, activates `venv/` if it already exists, verifies `pygame-ce` and `sortedcontainers`, clears `__pycache__` folders, and finally runs `python3 virus_game.py`. Ideal when you just need the essentials to restart the GUI quickly.
+- `./run_game.sh` – Guarantees a deterministic environment by creating `venv/` when missing, installing *all* packages listed in `requirements.txt`, and optionally launching in autorun mode (`./run_game.sh --autorun`). Use this when setting up from scratch or when you want the full dependency set refreshed.
 
 

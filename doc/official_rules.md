@@ -28,7 +28,7 @@ This evaluation focuses on three main aspects:
 Teams can consult Apiscoring's public documentation to optimize their score in each area.
 
 ### b. Jury Evaluation
-The jury will evaluate performance, considering whether the API provides real or simulated responses (teams may rely on WSO2 Devant or any preferred tooling) and the overall quality of its operation.  
+The jury will evaluate performance, considering whether the API provides real or simulated responses (teams may rely on [WSO2 Devant](https://console.devant.dev/login) or any preferred tooling) and the overall quality of its operation.
 Additionally, advantage cards will be awarded based on:
 
 - Originality of the proposal.  
