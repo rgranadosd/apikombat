@@ -1,42 +1,24 @@
-# Essential Documents – API Kombat
+# APIKOMBAT Documentation Hub
 
-This folder gathers every file you need to understand the game and reuse it in other projects.
+This directory groups the key documents you need to understand the APIKOMBAT tournament, play the card game, and submit your APIs for scoring.
 
-## Files included
+## Quick navigation
+- [`bases.md`](./bases.md) – Official tournament rules: eligibility, evaluation phases, match flow.
+- [`how_to_play.md`](./how_to_play.md) – Complete gameplay guide covering objectives, card types, and turn structure.
+- [`cards.md`](./cards.md) – Inventory of every card, grouped by type and color with icon and asset references.
+- [`zip_file.md`](./zip_file.md) – Step-by-step instructions (in Spanish) to assemble the `.zip` bundle for the API Scoring validator.
+- [`scoring.md`](./scoring.md) – Reference table of the design, security, and documentation rules enforced by the API Scoring engine.
 
-1. **`HOW_TO_PLAY.md`**  
-   - Full rulebook: objectives, components, card types, turn flow, victory conditions.  
-   - Format: Markdown.
+## If you are competing in the tournament
+1. Start with `bases.md` to confirm team composition, submission format, and how the jury awards advantage cards.
+2. Review `how_to_play.md` and `cards.md` to master the in-game mechanics before the knockout stages.
+3. Prepare your deliverable with the help of `zip_file.md`, ensuring both the `.zip` structure and documentation meet the scoring requirements.
 
-2. **`cartas_completas.csv`**  
-   - Summary of every card in the deck.  
-   - Columns: `tipo`, `color`, `nombre`, `cantidad`, `descripcion`.
-
-3. **`cartas_detalladas.csv`**  
-   - Detailed list (one row per card).  
-   - Columns: `tipo`, `color`, `nombre`, `cantidad`, `archivo_sugerido`, `icono`, `label`.  
-   - Total: 89 rows.
-
-4. **`CARTAS_ESPECIFICAS.md`**  
-   - Notes about specific cards.
-
-5. **`DESGLOSE_CARTAS_API.md`**  
-   - API-themed card breakdown.
-
-6. **`LISTA_COMPLETA_CARTAS_API.md`**  
-   - Complete list of API-themed cards.
-
-7. **`MAPEO_TEMATICA_API_FINAL.md`**  
-   - Final mapping of the API theme applied to each card.
-
-## How to reuse these files in other projects
-
-1. Read `REGLAS_DEL_JUEGO.txt` to understand the mechanics.  
-2. Use `cartas_completas.csv` or `cartas_detalladas.csv` to generate or port the deck.  
-3. Check the `.md` documents for extra design and implementation details.  
-4. The game engine lives in `engine.py` (outside this folder).
+## If you are building or validating APIs
+1. Follow `zip_file.md` to package contracts and Markdown docs so the web validator accepts your bundle.
+2. Use `scoring.md` as a checklist to pre-validate OpenAPI definitions and Markdown files before uploading.
 
 ---
 
-> Keep these files in sync with gameplay or deck changes so the documentation always reflects the current state of the game.
+Keep these documents aligned with rule updates or deck changes so competitors and reviewers always have the latest guidance.
 

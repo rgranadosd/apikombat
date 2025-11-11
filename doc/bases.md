@@ -1,52 +1,52 @@
-# Bases Oficiales del Torneo APIKOMBAT
+# Official Rules of the APIKOMBAT Tournament
 
-## 1. Descripción General
-APIKOMBAT es una dinámica competitiva en la que equipos de hasta cuatro integrantes deberán diseñar y construir una API con temática libre utilizando la herramienta BIJIRA de WSO2.  
-El objetivo es combinar habilidades técnicas, creatividad y estrategia para crear la mejor API en términos de calidad técnica, documentación y rendimiento.
+## 1. Overview
+APIKOMBAT is a competitive challenge in which teams of up to four members must design and build an API on any theme using WSO2's BIJIRA tool.  
+The goal is to combine technical skills, creativity, and strategy to develop the best API in terms of technical quality, documentation, and performance.
 
-## 2. Formato de Participación
-- Cada equipo estará compuesto por un máximo de cuatro miembros.  
-- El proyecto final deberá entregarse en formato `.zip`, siguiendo la estructura oficial proporcionada por la organización (enlace disponible en la documentación del evento).  
-- La presentación del archivo `.zip` y la demostración de la API son requisitos indispensables para poder competir.
+## 2. Participation Format
+- Each team can have a maximum of four members.  
+- The final project must be delivered in `.zip` format, following the official structure provided by the organizers (link available in the event documentation).  
+- Submitting the `.zip` file and presenting the API demo are mandatory requirements to compete.
 
-## 3. Evaluación Técnica
-La evaluación constará de dos fases:
+## 3. Technical Evaluation
+The evaluation consists of two phases:
 
-### a. Evaluación Automática
-La herramienta [Apiscoring](https://github.com/rgranadosd/apiscoring) realizará una evaluación automática del archivo entregado.  
-Esta evaluación considera tres aspectos principales:
+### a. Automated Evaluation
+The [Apiscoring](https://github.com/rgranadosd/apiscoring) tool will automatically assess the submitted file.  
+This evaluation focuses on three main aspects:
 
-- Seguridad: uso adecuado de mecanismos de autenticación y protección de datos.  
-- Gobierno: correcta definición de políticas y manejo de versiones.  
-- Documentación: claridad, estructura y completitud del contenido de referencia.
+- Security: appropriate use of authentication mechanisms and data protection.  
+- Governance: correct definition of policies and version management.  
+- Documentation: clarity, structure, and completeness of the reference material.
 
-Los equipos pueden consultar la documentación pública de Apiscoring para optimizar su puntuación en cada área.
+Teams can consult Apiscoring's public documentation to optimize their score in each area.
 
-### b. Evaluación del Jurado
-El jurado evaluará el aspecto de performance, valorando si la API ejecuta respuestas reales o simuladas (se puede utilizar WSO2 Devant o la herramienta que necesitéis), así como la calidad general del funcionamiento.  
-Adicionalmente, se otorgarán cartas de ventaja en función de:
+### b. Jury Evaluation
+The jury will evaluate performance, considering whether the API provides real or simulated responses (teams may rely on WSO2 Devant or any preferred tooling) and the overall quality of its operation.  
+Additionally, advantage cards will be awarded based on:
 
-- Originalidad de la propuesta.  
-- Viabilidad técnica del proyecto.  
-- Nivel tecnológico e innovador de la solución.  
+- Originality of the proposal.  
+- Technical feasibility of the project.  
+- Technological and innovative level of the solution.  
 
-Cada equipo podrá recibir hasta tres cartas adicionales, que se sumarán a las tres cartas de inicio del juego.
+Each team can receive up to three additional cards, which are added to the three starter cards in the game.
 
-## 4. Formación Previa
-Antes del torneo, se realizará una sesión formativa inicial para garantizar que todos los equipos comprendan el uso de la herramienta BIJIRA y las normas del evento, asegurando igualdad de condiciones.
+## 4. Training Session
+Before the tournament, an initial training session will be held to ensure all teams understand how to use the BIJIRA tool and the event rules, guaranteeing equal conditions.
 
-## 5. Desarrollo del Torneo
-- Tras la entrega y evaluación de todas las APIs, se llevará a cabo un sorteo de enfrentamientos directos entre equipos.  
-- Los ganadores de cada enfrentamiento avanzarán a la siguiente ronda eliminatoria hasta llegar a la gran final, donde se determinará el equipo vencedor del torneo APIKOMBAT.  
-- Durante las presentaciones, el jurado podrá formular preguntas a los equipos. Las respuestas correctas podrían ser recompensadas con cartas adicionales.  
+## 5. Tournament Progression
+- After all APIs have been submitted and evaluated, a draw will determine the head-to-head matchups between teams.  
+- The winners of each matchup will advance to the next knockout round until the grand final determines the champion of the APIKOMBAT tournament.  
+- During presentations, the jury may ask questions; correct answers can be rewarded with additional cards.  
 
-## 6. Recursos y Transparencia
-- La documentación oficial, el simulador del juego y los criterios de evaluación están publicados en el repositorio público del evento en GitHub.  
-- Existe un simulador de juego para que los equipos practiquen y comprendan la dinámica antes del torneo.
+## 6. Resources and Transparency
+- The official documentation, game simulator, and evaluation criteria are published in the event’s public GitHub repository.  
+- A game simulator is available so teams can practice and understand the dynamics before the tournament.
 
-## 7. Requisitos de Elegibilidad
-Para poder competir, cada equipo deberá:
+## 7. Eligibility Requirements
+To compete, each team must:
 
-- Entregar correctamente el fichero `.zip` dentro de los plazos establecidos.  
-- Realizar la presentación de su API ante el jurado.  
-- Cumplir las normas de originalidad y autoría de los contenidos presentados.
+- Submit the `.zip` file within the established deadlines.  
+- Present their API to the jury.  
+- Comply with the originality and authorship rules for the submitted content.
