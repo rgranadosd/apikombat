@@ -1,0 +1,28 @@
+tipo,color,nombre,cantidad,descripcion
+scoring,seguridad,Scoring SEGURIDAD,4,Scoring de seguridad
+scoring,documentacion,Scoring DOCUMENTACIÓN,4,Scoring de documentación
+scoring,gobierno,Scoring GOBIERNO,4,Scoring de gobierno
+scoring,performance,Scoring PERFORMANCE,4,Scoring de performance
+scoring,multicolor,Scoring Wildcard,1,Scoring comodín (cualquier color)
+ataque,seguridad,DoS,4,Ataque de seguridad: Denial of Service
+ataque,seguridad,SQL Injection,4,Ataque de seguridad: SQL Injection
+ataque,seguridad,OWASP,4,Ataque de seguridad: OWASP
+ataque,seguridad,Brute-Force,4,Ataque de seguridad: Brute-Force
+problema,documentacion,Problema DOCUMENTACIÓN,4,Problema de documentación
+problema,gobierno,Problema GOBIERNO,4,Problema de gobierno
+problema,performance,Problema PERFORMANCE,4,Problema de performance
+ataque,multicolor,Ataque/Problema Wildcard,1,Ataque/Problema comodín (cualquier color)
+proteccion,seguridad,OAuth2/JWT,4,Protección de seguridad: OAuth2/JWT
+proteccion,seguridad,HTTPS/SSL,4,Protección de seguridad: HTTPS/SSL
+proteccion,seguridad,Validación de Entrada,4,Protección de seguridad: Validación de Entrada
+proteccion,seguridad,Rate Limiting,4,Protección de seguridad: Rate Limiting
+proteccion,documentacion,Protección DOCUMENTACIÓN,4,Protección de documentación
+proteccion,gobierno,Protección GOBIERNO,4,Protección de gobierno
+proteccion,performance,Protección PERFORMANCE,4,Protección de performance
+proteccion,multicolor,Protección Wildcard,1,Protección comodín (cualquier color)
+intervencion,refactoring,Refactoring,4,Intervención: Refactoring
+intervencion,migracion,Migración,4,Intervención: Migración
+intervencion,activo_activo,Activo-Activo,4,Intervención: Activo-Activo
+intervencion,code_freeze,Code Freeze,1,Intervención: Code Freeze
+intervencion,rollback,Rollback,1,Intervención: Rollback
+

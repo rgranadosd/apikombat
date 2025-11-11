@@ -1,0 +1,876 @@
+# API CARD GAME - Definiciones de cartas
+# Formato según el motor MTG Python Engine
+# Ver: https://github.com/wanqizhu/mtg-python-engine
+
+##############################
+# Security (Fundamental)
+	Targets:
+		lambda self, p: p == self.controller
+
+	Play:
+		from MTG.api.aspecto import AspectoPermanent
+		aspecto = AspectoPermanent('seguridad', controller=self.controller)
+		self.controller.battlefield.add(aspecto)
+
+##############################
+# Documentation (Fundamental)
+	Targets:
+		lambda self, p: p == self.controller
+
+	Play:
+		from MTG.api.aspecto import AspectoPermanent
+		aspecto = AspectoPermanent('documentacion', controller=self.controller)
+		self.controller.battlefield.add(aspecto)
+
+##############################
+# Governance (Fundamental)
+	Targets:
+		lambda self, p: p == self.controller
+
+	Play:
+		from MTG.api.aspecto import AspectoPermanent
+		aspecto = AspectoPermanent('gobierno', controller=self.controller)
+		self.controller.battlefield.add(aspecto)
+
+##############################
+# Performance (Fundamental)
+	Targets:
+		lambda self, p: p == self.controller
+
+	Play:
+		from MTG.api.aspecto import AspectoPermanent
+		aspecto = AspectoPermanent('performance', controller=self.controller)
+		self.controller.battlefield.add(aspecto)
+
+##############################
+# All (Fundamental WildCard)
+	Targets:
+		lambda self, p: p == self.controller
+
+	Play:
+		# Seleccionar el primer aspecto disponible
+		from MTG.api.aspecto import AspectoPermanent
+		aspectos_disponibles = ['seguridad', 'documentacion', 'gobierno', 'performance']
+		aspectos_existentes = [
+			asp.aspecto_type for asp in self.controller.battlefield
+			if hasattr(asp, 'is_aspecto') and asp.is_aspecto
+		]
+		for tipo in aspectos_disponibles:
+			if tipo not in aspectos_existentes:
+				aspecto = AspectoPermanent(tipo, controller=self.controller)
+				self.controller.battlefield.add(aspecto)
+				return True
+		return False
+
+##############################
+# DoS (Hack Security)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'seguridad' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Brute Force (Hack Security)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'seguridad' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# OWASP (Hack Security)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'seguridad' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Bad Design (Hack Security)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'seguridad' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# WildCard (Hack Security)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'seguridad' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Integration Delay (Hack Documentation)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'documentacion' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Knowledge Silos (Hack Documentation)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'documentacion' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Onboarding Friction (Hack Documentation)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'documentacion' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Disabled AI agents (Hack Documentation)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'documentacion' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# WildCard (Hack Documentation)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'documentacion' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Low Reusability (Hack Governance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'gobierno' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Shadow APIs (Hack Governance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'gobierno' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Broken Ownership (Hack Governance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'gobierno' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Data Leakage Risk (Hack Governance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'gobierno' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Wildcard (Hack Governance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'gobierno' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Tooling Fragmentation (Hack Performance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'performance' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Inefficient API Gateways (Hack Performance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'performance' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Poor Developer Experience (DX) (Hack Performance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'performance' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Reactive Scaling (Hack Performance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'performance' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# WildCard (Hack Performance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'performance' 
+			and p.controller == self.controller.opponent
+			and not p.esta_protegido())
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		if self.targets_chosen[0].esta_protegido():
+			return False
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.controller.battlefield.remove(aspecto)
+			aspecto.controller.graveyard.add(aspecto)
+		else:
+			aspecto.vulnerar()
+		return True
+
+##############################
+# Automatic audits (Shield Security)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'seguridad' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# ApiGateway (Shield Security)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'seguridad' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Identity Server (Shield Security)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'seguridad' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Rate Limiting (Shield Security)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'seguridad' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Wildcard (Shield Security)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'seguridad' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# OpenAPI + JSON Schema + Samples (Shield Documentation)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'documentacion' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# AI Documentation (Shield Documentation)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'documentacion' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Dev Portal (Shield Documentation)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'documentacion' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Api Team (Shield Documentation)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'documentacion' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Wildcard (Shield Documentation)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'documentacion' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# DevOps (Shield Governance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'gobierno' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Deployment Control (Shield Governance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'gobierno' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# API Scoring (Shield Governance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'gobierno' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# API Catalog (Shield Governance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'gobierno' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Wildcard (Shield Governance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'gobierno' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Unified Stack (Shield Performance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'performance' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Testing End2End (Shield Performance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'performance' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Time to First Successful Call (TTFSC) (Shield Performance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'performance' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Cloud Control Plane (Shield Performance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'performance' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Wildcard (Shield Performance)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.aspecto_type == 'performance' 
+			and p.controller == self.controller)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		if aspecto.vulnerable:
+			aspecto.curar()
+		aspecto.add_proteccion()
+		return True
+
+##############################
+# Refactoring (Management)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.controller == self.controller)
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.controller == self.controller.opponent)
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		aspecto_mio = self.targets_chosen[0]
+		aspecto_oponente = self.targets_chosen[1]
+		aspecto_mio.controller.battlefield.remove(aspecto_mio)
+		aspecto_oponente.controller.battlefield.remove(aspecto_oponente)
+		aspecto_mio.controller = self.controller.opponent
+		aspecto_oponente.controller = self.controller
+		self.controller.battlefield.add(aspecto_oponente)
+		self.controller.opponent.battlefield.add(aspecto_mio)
+		return True
+
+##############################
+# Migration (Management)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.controller == self.controller.opponent
+			and not any(asp.aspecto_type == p.aspecto_type 
+				for asp in self.controller.battlefield 
+				if hasattr(asp, 'is_aspecto') and asp.is_aspecto))
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		aspecto_objetivo = self.targets_chosen[0]
+		oponente = self.controller.opponent
+		from MTG.api.aspecto import AspectoPermanent
+		nuevo_aspecto = AspectoPermanent(
+			aspecto_objetivo.aspecto_type,
+			controller=self.controller
+		)
+		nuevo_aspecto.vulnerable = aspecto_objetivo.vulnerable
+		nuevo_aspecto.protecciones = aspecto_objetivo.protecciones
+		self.controller.battlefield.add(nuevo_aspecto)
+		oponente.battlefield.remove(aspecto_objetivo)
+		oponente.graveyard.add(aspecto_objetivo)
+		return True
+
+##############################
+# Mirroring (Management)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.controller == self.controller 
+			and p.vulnerable)
+
+	Play:
+		if hasattr(self.controller.opponent, 'code_freeze_shield') and self.controller.opponent.code_freeze_shield:
+			self.controller.opponent.code_freeze_shield = False
+			return True
+		aspecto_mio = self.targets_chosen[0]
+		tipo_aspecto = aspecto_mio.aspecto_type
+		aspecto_oponente = None
+		for asp in self.controller.opponent.battlefield:
+			if (hasattr(asp, 'is_aspecto') and asp.is_aspecto 
+				and asp.aspecto_type == tipo_aspecto
+				and not asp.esta_fortalecido()
+				and not asp.vulnerable):
+				aspecto_oponente = asp
+				break
+		if aspecto_oponente:
+			aspecto_oponente.vulnerar()
+			return True
+		return False
+
+##############################
+# Code Freeze (Management)
+	Play:
+		self.controller.code_freeze_shield = True
+		return True
+
+##############################
+# Rollback (Management)
+	Targets:
+		lambda self, p: (hasattr(p, 'is_aspecto') and p.is_aspecto 
+			and p.controller == self.controller.opponent
+			and p.protecciones > 0)
+
+	Play:
+		aspecto = self.targets_chosen[0]
+		aspecto.remove_proteccion()
+		return True

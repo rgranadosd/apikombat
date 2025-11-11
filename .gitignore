@@ -1,0 +1,41 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual envs
+.env/
+env/
+venv/
+.venv/
+
+# Logs and runtime artifacts
+*.log
+run_log*.txt
+test_log*.txt
+
+# Backups & archives
+Backup_*/
+backup_*/
+virus-game_before_restore_*/
+virus_game_backup_*/
+virus_game_test/
+*.zip
+
+# Game assets generated at runtime
+virus-game/assets/trace.log
+virus-game/assets/diario.txt
+
+# Pygame cache / screenshots
+virus-game/screenshots/
+virus-game/.pygame_cache/
+
+

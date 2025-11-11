@@ -1,0 +1,5 @@
+# Requisitos del proyecto (Pygame-CE)
+pygame-ce>=2.5.0
+
+# Motor MTG (opcional, para USE_MTG_ENGINE=true)
+sortedcontainers>=2.3.0

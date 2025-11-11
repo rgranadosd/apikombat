@@ -1,0 +1,76 @@
+{
+  "$schema": "https://example.com/virus-game/theme.schema.json",
+  "meta": {
+    "name": "default",
+    "version": 1,
+    "updatedAt": "2025-11-03"
+  },
+  "layout": {
+    "card": { "width": 120, "height": 170 },
+    "hand": { "gap": 160, "y": "bottom-90" },
+    "slots": {
+      "order": ["corazon", "cerebro", "huesos", "estomago"],
+      "gap": 180,
+      "yTop": 220,
+      "yBottom": 460
+    }
+  },
+  "fonts": {
+    "large": { "name": "default", "size": 32 },
+    "medium": { "name": "default", "size": 20 },
+    "small": { "name": "default", "size": 14 }
+  },
+  "colors": {
+    "state": {
+      "sano": "#00A86B",
+      "vacunado": "#50A0FF",
+      "inmunizado": "#C0C0C0",
+      "infecto": "#DC1E1E"
+    }
+  },
+  "images": {
+    "cardBack": "assets/cards/back.png",
+    "organs": {
+      "corazon": {
+        "sano": "assets/cards/organo_corazon.png",
+        "vacunado": "assets/cards/medicina_corazon.png",
+        "inmunizado": "assets/cards/medicina_corazon.png",
+        "infecto": "assets/cards/virus_corazon.png"
+      },
+      "cerebro": {
+        "sano": "assets/cards/organo_cerebro.png",
+        "vacunado": "assets/cards/medicina_cerebro.png",
+        "inmunizado": "assets/cards/medicina_cerebro.png",
+        "infecto": "assets/cards/virus_cerebro.png"
+      },
+      "huesos": {
+        "sano": "assets/cards/organo_huesos.png",
+        "vacunado": "assets/cards/medicina_huesos.png",
+        "inmunizado": "assets/cards/medicina_huesos.png",
+        "infecto": "assets/cards/virus_huesos.png"
+      },
+      "estomago": {
+        "sano": "assets/cards/organo_estomago.png",
+        "vacunado": "assets/cards/medicina_estomago.png",
+        "inmunizado": "assets/cards/medicina_estomago.png",
+        "infecto": "assets/cards/virus_estomago.png"
+      },
+      "multicolor": {
+        "sano": "assets/cards/organo_multicolor.png",
+        "vacunado": "assets/cards/medicina_multicolor.png",
+        "inmunizado": "assets/cards/medicina_multicolor.png",
+        "infecto": "assets/cards/virus_multicolor.png"
+      }
+    }
+  },
+  "sfx": {
+    "place": "assets/sfx/place.wav",
+    "infect": "assets/sfx/infect.wav",
+    "cure": "assets/sfx/cure.wav",
+    "vaccinate": "assets/sfx/vaccinate.wav",
+    "immunize": "assets/sfx/immunize.wav",
+    "destroy": "assets/sfx/destroy.wav"
+  }
+}
+
+
