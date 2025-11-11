@@ -23,7 +23,7 @@ Esta evaluación considera tres aspectos principales:
 Los equipos pueden consultar la documentación pública de Apiscoring para optimizar su puntuación en cada área.
 
 ### b. Evaluación del Jurado
-El jurado evaluará el aspecto de performance, valorando si la API ejecuta respuestas reales o simuladas, así como la calidad general del funcionamiento.  
+El jurado evaluará el aspecto de performance, valorando si la API ejecuta respuestas reales o simuladas (se puede utilizar WSO2 Devant o la herramienta que necesitéis, así como la calidad general del funcionamiento.  
 Adicionalmente, se otorgarán cartas de ventaja en función de:
 
 - Originalidad de la propuesta.  
