@@ -1,8 +1,9 @@
+# Official Rules of the APIKOMBAT Tournament
+
 <p align="center">
   <img src="./screenshot.png" alt="APIKOMBAT overview screenshot">
 </p>
 
-# Official Rules of the APIKOMBAT Tournament
 
 ## 1. Overview
 APIKOMBAT is a competitive challenge in which teams of up to four members must design and build an API on any theme using WSO2's BIJIRA tool.  
