@@ -6,7 +6,7 @@
 
 
 ## 1. Overview
-APIKOMBAT is a competitive challenge in which teams of up to four members must design and build an API on any theme using WSO2's BIJIRA tool.  
+APIKOMBAT is a competitive challenge in which teams of up to four members must design and build an API on any theme using WSO2's [BIJIRA tool](https://console.bijira.dev/login).  
 The goal is to combine technical skills, creativity, and strategy to develop the best API in terms of technical quality, documentation, and performance.
 
 ## 2. Participation Format
@@ -38,7 +38,7 @@ Additionally, advantage cards will be awarded based on:
 Each team can receive up to three additional cards, which are added to the three starter cards in the game.
 
 ## 4. Training Session
-Before the tournament, an initial training session will be held to ensure all teams understand how to use the BIJIRA tool and the event rules, guaranteeing equal conditions.
+Before the tournament, an initial training session will be held to ensure all teams understand how to use the [BIJIRA tool](https://console.bijira.dev/login) and the event rules, guaranteeing equal conditions.
 
 ## 5. Tournament Progression
 - After all APIs have been submitted and evaluated, a draw will determine the head-to-head matchups between teams.  
