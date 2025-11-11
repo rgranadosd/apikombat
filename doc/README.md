@@ -1,6 +1,12 @@
+
+
 # APIKOMBAT Documentation Hub
 
 This directory groups the key documents you need to understand the APIKOMBAT tournament, play the card game, and submit your APIs for scoring.
+
+<p align="center">
+  <img src="./screenshot.png" alt="APIKOMBAT overview screenshot">
+</p>
 
 ## Quick navigation
 - [`bases.md`](./bases.md) – Official tournament rules: eligibility, evaluation phases, match flow.
