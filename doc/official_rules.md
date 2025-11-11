@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./screenshot.png" alt="APIKOMBAT overview screenshot">
+</p>
+
 # Official Rules of the APIKOMBAT Tournament
 
 ## 1. Overview
@@ -6,7 +10,7 @@ The goal is to combine technical skills, creativity, and strategy to develop the
 
 ## 2. Participation Format
 - Each team can have a maximum of four members.  
-- The final project must be delivered in `.zip` format, following the official structure provided by the organizers (link available in the event documentation).  
+- The final project must be delivered in [`.zip`](zip_file.md) format, following the official structure provided by the organizers (link available in the event documentation).  
 - Submitting the `.zip` file and presenting the API demo are mandatory requirements to compete.
 
 ## 3. Technical Evaluation
@@ -47,6 +51,6 @@ Before the tournament, an initial training session will be held to ensure all te
 ## 7. Eligibility Requirements
 To compete, each team must:
 
-- Submit the `.zip` file within the established deadlines.  
+- Submit the [`.zip`](zip_file.md) file within the established deadlines.  
 - Present their API to the jury.  
 - Comply with the originality and authorship rules for the submitted content.

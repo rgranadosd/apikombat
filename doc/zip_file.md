@@ -1,104 +1,104 @@
-# Guía de preparación del ZIP para API Scoring
+# ZIP Preparation Guide for API Scoring
 
-Este documento describe cómo debe estructurarse el paquete `.zip` que se sube al validador web de **API Scoring**. Sigue estas reglas para evitar errores `422 Unprocessable Entity` y garantizar que todas las verificaciones (Diseño, Seguridad y Documentación) puedan ejecutarse.
-
----
-
-## 1. Principios generales
-
-- El archivo debe estar comprimido en formato **ZIP** estándar (sin contraseña).
-- El contenido del ZIP se descomprime en un directorio temporal; por tanto, todas las rutas deben ser relativas a la carpeta raíz del ZIP.
-- Los contratos soportados actualmente son OpenAPI/REST (`.yaml`, `.yml`, `.json`) y los materiales adicionales (README u otros Markdown) deben codificarse en UTF‑8.
-- Evita incluir ficheros binarios innecesarios. Solo se necesitan contratos, documentación y archivos de configuración relevantes.
+This document explains how to structure the `.zip` package that you upload to the **API Scoring** web validator. Follow these rules to avoid `422 Unprocessable Entity` errors and to ensure that all checks (Design, Security, and Documentation) can run.
 
 ---
 
-## 2. Modalidad principal: `metadata.yml`
+## 1. General principles
 
-La forma más completa consiste en añadir un fichero `metadata.yml` en la raíz del ZIP con el listado de APIs a evaluar.
+- Compress the bundle using the standard **ZIP** format (no password).
+- The ZIP is unpacked into a temporary directory; therefore, every path must be relative to the ZIP root folder.
+- Supported contracts are OpenAPI/REST (`.yaml`, `.yml`, `.json`). Additional materials (README or other Markdown files) must be encoded in UTF-8.
+- Skip unnecessary binary files. Only include contracts, documentation, and relevant configuration files.
 
-### 2.1. Ubicación
+---
+
+## 2. Primary workflow: `metadata.yml`
+
+The most complete option is to add a `metadata.yml` file at the root of the ZIP with the list of APIs to evaluate.
+
+### 2.1. Location
 
 ```
 my-bundle.zip
-├── metadata.yml          # requerido en esta modalidad
+├── metadata.yml          # required in this workflow
 └── myApis/
     └── ...
 ```
 
-### 2.2. Formato del `metadata.yml`
+### 2.2. `metadata.yml` format
 
 ```yaml
 apis:
   - name: "REST Sample"
-    api-spec-type: rest           # valores admitidos: rest | event | grpc | graphql
-    definition-path: myApis/rest  # carpeta relativa dentro del ZIP
+    api-spec-type: rest           # allowed values: rest | event | grpc | graphql
+    definition-path: myApis/rest  # relative folder inside the ZIP
     definition-file: contract/openapi-rest.yml
 ```
 
-- `name`: Identificador legible para la API (aparece en los reportes).
-- `api-spec-type`: Tipo de contrato. Determina qué linters se ejecutan.
-- `definition-path`: Directorio relativo que contiene la definición.
-- `definition-file`: Ruta del archivo dentro de `definition-path`.
+- `name`: Human-readable identifier for the API (shown in reports).
+- `api-spec-type`: Contract type. It determines which linters run.
+- `definition-path`: Relative directory containing the definition.
+- `definition-file`: Path to the file within `definition-path`.
 
-Puedes declarar varias APIs dentro del mismo ZIP: cada entrada del array `apis` se procesa y puntúa de manera independiente.
+You can declare multiple APIs in the same ZIP. Each entry in the `apis` array is processed and scored independently.
 
 ---
 
-## 3. Modalidad alternativa: exportaciones WSO2
+## 3. Alternative workflow: WSO2 exports
 
-Cuando el ZIP procede de una exportación directa de **WSO2 API Manager**, el motor detecta automáticamente la estructura. En este caso no es obligatorio incluir `metadata.yml`.
+When the ZIP comes from a direct **WSO2 API Manager** export, the engine detects the structure automatically. In this case, including `metadata.yml` is optional.
 
-### 3.1. Estructura mínima esperada
+### 3.1. Minimum expected structure
 
 ```
 PizzaShackAPI-1.0.0.zip
-├── api.yaml                       # o api.yml / api.json
+├── api.yaml                       # or api.yml / api.json
 └── Definitions/
-    └── swagger.yaml               # también se aceptan swagger.yml|json u openapi.yaml|yml|json
+    └── swagger.yaml               # swagger.yml|json or openapi.yaml|yml|json are also accepted
 ```
 
-También se admiten exportaciones donde el archivo `api.yaml` reside dentro de `Meta-information/api.yaml`. El parser buscará en los siguientes caminos:
+Exports where the `api.yaml` file lives inside `Meta-information/api.yaml` are also accepted. The parser looks in the following paths:
 
 - `api.yaml`, `api.yml`, `api.json`
 - `Meta-information/api.yaml`, `Meta-information/api.yml`, `Meta-information/api.json`
 
-Para la definición (`definition-file`) se evalúan estos nombres dentro de `Definitions/`:
+For the definition (`definition-file`), these names are evaluated inside `Definitions/`:
 
 - `swagger.yaml`, `swagger.yml`, `swagger.json`
 - `openapi.yaml`, `openapi.yml`, `openapi.json`
 
-### 3.2. Recomendaciones
+### 3.2. Recommendations
 
-- Mantén el nombre de la carpeta principal con el identificador de la API; ese nombre se usa como fallback para rellenar campos cuando falta metadata.
-- No elimines ni renombres `Meta-information` o `Definitions`; el detector se basa en esas carpetas.
+- Keep the top-level folder name aligned with the API identifier; that value is used as a fallback when metadata is missing.
+- Do not delete or rename `Meta-information` or `Definitions`; the detector relies on those folders.
 
 ---
 
-## 4. Documentación opcional (módulo Documentation)
+## 4. Optional documentation (Documentation module)
 
-Si deseas puntuar el módulo de Documentación, añade un `README.md` (u otros archivos `.md`) en el ZIP. Markdownlint comprobará que exista una sección `# About`. Ejemplo:
+If you want to score the Documentation module, add a `README.md` (or other `.md` files) to the ZIP. Markdownlint checks for a `# About` section. Example:
 
 ```
 README.md
-└── Contenido…
+└── Content…
     └── # About
 ```
 
-> Si no se incluye documentación en Markdown, el módulo seguirá apareciendo, pero con puntuación reducida o sin datos.
+> If no Markdown documentation is included, the module still appears but its score will be reduced or missing.
 
 ---
 
-## 5. Buenas prácticas
+## 5. Best practices
 
-- **Nombres coherentes**: Usa nombres de carpetas y archivos consistentes con el contenido (`contract/openapi.yaml`, `schemas/…`).
-- **Codificación UTF‑8**: Evita caracteres especiales sin declarar; algunos linters son sensibles a codificaciones distintas.
-- **Validación previa**: Si es posible, valida los contratos con Spectral o herramientas similares antes de comprimir.
-- **Tamaño razonable**: El ZIP debe ser ligero. El backend rechaza archivos excesivamente grandes para proteger la plataforma.
+- **Consistent names**: Use folder and file names that match their content (`contract/openapi.yaml`, `schemas/...`).
+- **UTF-8 encoding**: Avoid undeclared special characters; some linters are sensitive to other encodings.
+- **Pre-validation**: If possible, validate the contracts with Spectral or similar tools before compressing.
+- **Reasonable size**: Keep the ZIP lean. The backend rejects oversized files to protect the platform.
 
 ---
 
-## 6. Ejemplo completo
+## 6. Full example
 
 ```
 bundle.zip
@@ -113,15 +113,15 @@ bundle.zip
         └── asyncapi.yml
 ```
 
-En este caso, `metadata.yml` referencia las dos APIs (`rest` y `event`). El `README.md` proporciona la documentación para que el módulo de Documentación pueda ejecutarse.
+In this scenario, `metadata.yml` references both APIs (`rest` and `event`). The `README.md` provides the documentation required for the Documentation module to run.
 
 ---
 
-### Resumen
+### Summary
 
-1. **Con `metadata.yml`**: especifica todas las APIs a validar y sus rutas.
-2. **Con exportaciones WSO2**: asegúrate de mantener `api.yaml` y `Definitions/swagger.yaml` (o equivalentes) en las ubicaciones estándar.
-3. **Documentación Markdown**: añade un `README.md` con sección `About` si deseas una evaluación completa.
+1. **With `metadata.yml`**: specify every API to validate and its paths.
+2. **With WSO2 exports**: keep `api.yaml` and `Definitions/swagger.yaml` (or equivalents) in their standard locations.
+3. **Markdown documentation**: add a `README.md` with an `About` section if you need a complete evaluation.
 
-Cumpliendo estas pautas, el analizador web aceptará el ZIP y generará los informes con el radar de puntuaciones y los listados de issues.
+By following these guidelines, the web analyzer will accept the ZIP and produce the radar charts and issue listings in the reports.
 
