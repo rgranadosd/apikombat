@@ -4,9 +4,9 @@ This folder gathers every file you need to understand the game and reuse it in o
 
 ## Files included
 
-1. **`REGLAS_DEL_JUEGO.txt`**  
+1. **`HOW_TO_PLAY.md`**  
    - Full rulebook: objectives, components, card types, turn flow, victory conditions.  
-   - Format: plain text.
+   - Format: Markdown.
 
 2. **`cartas_completas.csv`**  
    - Summary of every card in the deck.  
