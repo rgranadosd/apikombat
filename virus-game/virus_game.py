@@ -968,7 +968,8 @@ class APIGameGUI:
                     if dragged_card in self.player1_hand_zone.cards:
                         dragged_card.set_position_immediate(dragged_card.x, dragged_card.y)
                     self.game_ui.dragged_card = None
-                    return
+            # Prevent pygame_cards from processing the event while the AI is acting
+            return
     
         # Let pygame_cards process the event (after our selection handling)
         self.game_ui.handle_event(event)
