@@ -1,0 +1,18 @@
+services:
+  apim:
+    image: wso2-apim:4.6.0-jdk21
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9443:9443"
+      - "9763:9763"
+      - "8243:8243"
+      - "8280:8280"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9443"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - ./src/openapi:/opt/src/openapi

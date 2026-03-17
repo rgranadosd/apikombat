@@ -1,10 +1,10 @@
-# 🚀 WSO2 APIM & MCP Zero-Click Automator
+# 🚀 WSO2 APIM & MCP Smart Sandbox
 
 A fully automated, containerized solution to spin up a complete WSO2 API Manager 4.6.0 environment from a simple OpenAPI Specification (OAS). 
 
 This project is designed to drastically reduce the time needed to create demonstrations, test environments, and AI-ready API integrations. Just drop your Swagger/OAS file, run a single Docker command, and get a fully published API with mocking, a deployed Model Context Protocol (MCP) server, and ready-to-use OAuth2 tokens.
 
-## ✨ Features (The "Zero-Click" Magic)
+## ✨ Features (The "Smart Sandbox")
 
 By simply running Docker Compose, this automation pipeline performs the following steps without any human intervention:
 

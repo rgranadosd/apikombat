@@ -1,0 +1,171 @@
+openapi: 3.0.3
+info:
+  title: SkyCast Weather API
+  description: API profesional para consulta de estados meteorológicos en tiempo real y pronósticos.
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: dev@skycast.io
+
+servers:
+  - url: https://api.skycast.io/v1
+    description: Servidor de Producción
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  schemas:
+    WeatherResponse:
+      type: object
+      properties:
+        metadata:
+          type: object
+          properties:
+            timestamp:
+              type: string
+              format: date-time
+            location:
+              type: string
+            coordinates:
+              type: object
+              properties:
+                lat: { type: number, example: 40.4168 }
+                lon: { type: number, example: -3.7038 }
+        weather:
+          type: object
+          properties:
+            temp: { type: number, example: 18.5 }
+            condition: { type: string, example: "sunny" }
+            humidity: { type: integer, example: 45 }
+            wind_speed: { type: number, example: 12.4 }
+
+    Error:
+      type: object
+      properties:
+        code: { type: integer }
+        message: { type: string }
+
+paths:
+  /current/{city}:
+    get:
+      summary: Obtener clima actual por ciudad
+      operationId: getCurrentWeather
+      parameters:
+        - name: city
+          in: path
+          required: true
+          description: Nombre de la ciudad (ej. madrid, london)
+          schema:
+            type: string
+        - name: units
+          in: query
+          schema:
+            type: string
+            enum: [metric, imperial]
+            default: metric
+      responses:
+        '200':
+          description: Operación exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeatherResponse'
+              example:
+                metadata:
+                  timestamp: "2026-03-06T18:00:00Z"
+                  location: "Madrid, ES"
+                  coordinates:
+                    lat: 40.4168
+                    lon: -3.7038
+                weather:
+                  temp: 18.5
+                  condition: "sunny"
+                  humidity: 45
+                  wind_speed: 12.4
+        '401':
+          description: No autorizado - API Key inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 401
+                message: "Unauthorized: Invalid or missing authentication token"
+        '404':
+          description: Ciudad no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: 404
+                message: "City not found in our database"
+
+  /forecast/{lat}/{lon}:
+    get:
+      summary: Pronóstico para coordenadas específicas
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: lat
+          in: path
+          required: true
+          schema: { type: number }
+        - name: lon
+          in: path
+          required: true
+          schema: { type: number }
+        - name: days
+          in: query
+          description: Número de días de pronóstico
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 7
+      responses:
+        '200':
+          description: Lista de pronósticos diarios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WeatherResponse'
+              example:
+                - metadata:
+                    timestamp: "2026-03-07T12:00:00Z"
+                    location: "Coordenadas Solicitadas"
+                    coordinates:
+                      lat: 40.4168
+                      lon: -3.7038
+                  weather:
+                    temp: 20.1
+                    condition: "partly cloudy"
+                    humidity: 50
+                    wind_speed: 15.2
+                - metadata:
+                    timestamp: "2026-03-08T12:00:00Z"
+                    location: "Coordenadas Solicitadas"
+                    coordinates:
+                      lat: 40.4168
+                      lon: -3.7038
+                  weather:
+                    temp: 16.5
+                    condition: "rain"
+                    humidity: 75
+                    wind_speed: 22.0
+                - metadata:
+                    timestamp: "2026-03-09T12:00:00Z"
+                    location: "Coordenadas Solicitadas"
+                    coordinates:
+                      lat: 40.4168
+                      lon: -3.7038
+                  weather:
+                    temp: 19.0
+                    condition: "sunny"
+                    humidity: 40
+                    wind_speed: 10.5

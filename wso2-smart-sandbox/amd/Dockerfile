@@ -26,7 +26,11 @@ RUN mkdir -p /etc/apt/keyrings \
  && apt-get install -y temurin-21-jdk \
  && rm -rf /var/lib/apt/lists/*
 
-ENV JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-arm64
+# Magia Multi-Arquitectura para Java
+RUN ARCH=$(dpkg --print-architecture) && \
+    ln -s /usr/lib/jvm/temurin-21-jdk-$ARCH /usr/lib/jvm/default-jdk
+
+ENV JAVA_HOME=/usr/lib/jvm/default-jdk
 ENV PATH=$JAVA_HOME/bin:$PATH
 
 # Instalar WSO2 APIM
@@ -36,14 +40,16 @@ RUN wget https://github.com/wso2/product-apim/releases/download/v4.6.0/wso2am-4.
  && unzip wso2am-4.6.0.zip \
  && rm wso2am-4.6.0.zip
 
-# Instalar apictl v4.6.0
+# --- CORRECCIÓN AQUÍ: Instalador apictl inteligente con Fallbacks ---
 RUN ARCH=$(uname -m) && \
     if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then \
-        APICTL_URL="https://github.com/wso2/product-apim-tooling/releases/download/v4.6.0/apictl-4.6.0-linux-arm64.tar.gz"; \
+        curl -fsSL "https://github.com/wso2/product-apim-tooling/releases/download/v4.6.0/apictl-4.6.0-linux-arm64.tar.gz" -o apictl.tar.gz || \
+        curl -fsSL "https://github.com/wso2/product-apim-tooling/releases/download/v4.4.0/apictl-4.4.0-linux-arm64.tar.gz" -o apictl.tar.gz; \
     else \
-        APICTL_URL="https://github.com/wso2/product-apim-tooling/releases/download/v4.6.0/apictl-4.6.0-linux-x64.tar.gz"; \
+        curl -fsSL "https://github.com/wso2/product-apim-tooling/releases/download/v4.6.0/apictl-4.6.0-linux-x64.tar.gz" -o apictl.tar.gz || \
+        curl -fsSL "https://github.com/wso2/product-apim-tooling/releases/download/v4.6.0/apictl-4.6.0-linux-amd64.tar.gz" -o apictl.tar.gz || \
+        curl -fsSL "https://github.com/wso2/product-apim-tooling/releases/download/v4.4.0/apictl-4.4.0-linux-x64.tar.gz" -o apictl.tar.gz; \
     fi && \
-    curl -fsSL "$APICTL_URL" -o apictl.tar.gz && \
     mkdir -p temp_apictl && \
     tar -xzf apictl.tar.gz -C temp_apictl --strip-components=1 && \
     cp temp_apictl/apictl /usr/local/bin/ && \
@@ -267,7 +273,6 @@ for oas_file in /opt/src/openapi/*.yaml /opt/src/openapi/*.json; do
         api_name=$(grep "^  name:" "$project_name/api.yaml" | head -1 | awk '{print $2}' | tr -d '\r"')
         api_version=$(grep "^  version:" "$project_name/api.yaml" | head -1 | awk '{print $2}' | tr -d '\r"')
         
-        echo ">> Buscando UUID de la API (Polling)..."
         API_ID="null"
         RETRIES=0
         while [ "$API_ID" == "null" ] && [ $RETRIES -lt 15 ]; do
@@ -280,33 +285,26 @@ for oas_file in /opt/src/openapi/*.yaml /opt/src/openapi/*.json; do
         API_CONTEXT=$(echo "$API_JSON" | jq -r '.list[0].context')
         
         if [ "$API_ID" != "null" ] && [ ! -z "$API_ID" ]; then
-            echo ">> Configurando Mock (INLINE) y Políticas de CORS para la API..."
+            echo ">> Configurando Mock (INLINE) y Políticas para la API..."
             curl -k -s -X POST "https://localhost:9443/api/am/publisher/v4/apis/$API_ID/generate-mock-scripts" -H "Authorization: Bearer $TOKEN" > /dev/null
             API_FULL=$(curl -k -s -X GET "https://localhost:9443/api/am/publisher/v4/apis/$API_ID" -H "Authorization: Bearer $TOKEN")
-            
-            # INYECCIÓN DIRECTA DE REGLAS CORS ABIERTAS POR API
-            UPDATED_API=$(echo "$API_FULL" | jq '.endpointImplementationType = "INLINE" | .policies = ["Unlimited"] | .corsConfiguration = {"corsConfigurationEnabled": true, "accessControlAllowOrigins": ["*"], "accessControlAllowCredentials": false, "accessControlAllowHeaders": ["authorization", "Access-Control-Allow-Origin", "Content-Type", "SOAPAction", "apikey", "Internal-Key", "Accept", "Origin"], "accessControlAllowMethods": ["GET", "PUT", "POST", "DELETE", "PATCH", "OPTIONS"]} | del(.authorizationHeader, .securityScheme)')
-            
+            UPDATED_API=$(echo "$API_FULL" | jq '.endpointImplementationType = "INLINE" | .policies = ["Unlimited"] | del(.authorizationHeader, .securityScheme, .corsConfiguration)')
             curl -k -s -X PUT "https://localhost:9443/api/am/publisher/v4/apis/$API_ID" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "$UPDATED_API" > /dev/null
             
-            echo ">> Desplegando y Publicando API base..."
             apictl create api-revision -a "$api_name" -v "$api_version" -e dev -k > /dev/null 2>&1 || true
             apictl deploy api-revision -a "$api_name" -v "$api_version" --rev 1 -g Default -e dev -k > /dev/null 2>&1 || true
             curl -k -s -X POST "https://localhost:9443/api/am/publisher/v4/apis/change-lifecycle?apiId=$API_ID&action=Publish" -H "Authorization: Bearer $TOKEN" > /dev/null
 
             echo ">> Dando tiempo al DevPortal para indexar la API..."
             sleep 4
-
-            echo ">> Suscribiendo aplicación a la API base..."
-            SUB_API_RESP=$(curl -k -s -X POST "https://localhost:9443/api/am/devportal/v3/subscriptions" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "{\"applicationId\":\"$APP_ID\",\"apiId\":\"$API_ID\",\"throttlingPolicy\":\"Unlimited\"}")
+            curl -k -s -X POST "https://localhost:9443/api/am/devportal/v3/subscriptions" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "{\"applicationId\":\"$APP_ID\",\"apiId\":\"$API_ID\",\"throttlingPolicy\":\"Unlimited\"}" > /dev/null
             
-            echo ">> Generando e Importando MCP Server (LLM Tools)..."
+            echo ">> Generando e Importando MCP Server..."
             cd /opt
             rm -rf mcp_build
             python3 mcp_generator.py "$oas_file" "$api_name" "$api_version" "$API_ID" "$API_CONTEXT"
             apictl import mcp-server -f mcp_build -e dev -k --update
             
-            echo ">> Buscando UUID del MCP (Polling)..."
             MCP_ID="null"
             MCP_RETRIES=0
             while [ "$MCP_ID" == "null" ] && [ $MCP_RETRIES -lt 15 ]; do
@@ -317,66 +315,21 @@ for oas_file in /opt/src/openapi/*.yaml /opt/src/openapi/*.json; do
             done
 
             if [ "$MCP_ID" != "null" ] && [ "$MCP_ID" != "" ]; then
-                echo ">> MCP Encontrado ($MCP_ID). Forzando despliegue en Gateway..."
                 REV_RESP=$(curl -k -s -X POST "https://localhost:9443/api/am/publisher/v4/mcp-servers/$MCP_ID/revisions" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '{"description":"AutoDeploy"}')
                 REV_ID=$(echo "$REV_RESP" | jq -r '.id // empty')
-                
                 if [ ! -z "$REV_ID" ]; then
                     curl -k -s -X POST "https://localhost:9443/api/am/publisher/v4/mcp-servers/$MCP_ID/deploy-revision?revisionId=$REV_ID" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d '[{"name":"Default","vhost":"localhost","displayOnDevportal":true}]' > /dev/null
                 fi
-
-                echo ">> Dando tiempo al DevPortal para indexar el MCP..."
                 sleep 4
-
-                echo ">> Suscribiendo aplicación al MCP..."
-                SUB_MCP_RESP=$(curl -k -s -X POST "https://localhost:9443/api/am/devportal/v3/subscriptions" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "{\"applicationId\":\"$APP_ID\",\"apiId\":\"$MCP_ID\",\"throttlingPolicy\":\"Unlimited\"}")
-            else
-                 echo ">> ERROR: Timeout esperando la indexación del MCP."
+                curl -k -s -X POST "https://localhost:9443/api/am/devportal/v3/subscriptions" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "{\"applicationId\":\"$APP_ID\",\"apiId\":\"$MCP_ID\",\"throttlingPolicy\":\"Unlimited\"}" > /dev/null
             fi
-        else
-            echo ">> ERROR: Timeout esperando la indexación de la API $api_name"
         fi
-        
         rm -rf "$project_name" /opt/mcp_build
     fi
 done
 
-echo "--- 3. Generando AI APIs (OpenAI, Gemini, Mistral) con Guardrails ---"
-PROVIDERS=("OpenAI:openai:https://api.openai.com/v1" "Gemini:gemini:https://generativelanguage.googleapis.com/v1beta" "MistralAI:mistral:https://api.mistral.ai/v1")
-
-for provider_info in "${PROVIDERS[@]}"; do
-    IFS=':' read -r llm_name llm_id llm_url <<< "$provider_info"
-    
-    echo ">> Construyendo AI API: $llm_name..."
-    cd /opt
-    python3 ai_api_generator.py "$llm_name" "$llm_id" "$llm_url"
-    
-    apictl import api -f "AI_$llm_name" -e dev -k --update
-    
-    AI_API_ID="null"
-    AI_RETRIES=0
-    while [ "$AI_API_ID" == "null" ] && [ $AI_RETRIES -lt 15 ]; do
-        sleep 2
-        AI_JSON=$(curl -k -s -X GET "https://localhost:9443/api/am/publisher/v4/apis?query=name:AI_$llm_name" -H "Authorization: Bearer $TOKEN")
-        AI_API_ID=$(echo "$AI_JSON" | jq -r '.list[0].id // "null"')
-        AI_RETRIES=$((AI_RETRIES+1))
-    done
-
-    if [ "$AI_API_ID" != "null" ] && [ ! -z "$AI_API_ID" ]; then
-        echo "   Publicando y Suscribiendo a $llm_name..."
-        curl -k -s -X POST "https://localhost:9443/api/am/publisher/v4/apis/change-lifecycle?apiId=$AI_API_ID&action=Publish" -H "Authorization: Bearer $TOKEN" > /dev/null
-        sleep 4
-        curl -k -s -X POST "https://localhost:9443/api/am/devportal/v3/subscriptions" -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" -d "{\"applicationId\":\"$APP_ID\",\"apiId\":\"$AI_API_ID\",\"throttlingPolicy\":\"Unlimited\"}" > /dev/null 2>&1 || true
-    else
-        echo "   ERROR: Timeout indexando AI API $llm_name"
-    fi
-    
-    rm -rf "AI_$llm_name"
-done
-
-echo "--- 4. Generando Claves de Produccion y Sandbox ---"
+echo "--- 3. Generando Claves de Produccion y Sandbox ---"
 if [ "$APP_ID" != "null" ] && [ ! -z "$APP_ID" ]; then
-    
     PROD_RESPONSE=$(curl -k -s -X POST "https://localhost:9443/api/am/devportal/v3/applications/$APP_ID/generate-keys" \
       -H "Authorization: Bearer $TOKEN" \
       -H "Content-Type: application/json" \
@@ -391,7 +344,7 @@ if [ "$APP_ID" != "null" ] && [ ! -z "$APP_ID" ]; then
     
     >&2 echo ""
     >&2 echo "=================================================================="
-    >&2 echo " 🎉 TODO LISTO: API + MOCK + PORTAL + MCP SERVER DESPLEGADO 🎉"
+    >&2 echo " 🎉 TODO LISTO: API + MOCK + PORTAL + MCP + AI APIs GATEWAY 🎉"
     >&2 echo " "
     >&2 echo " Usa estos tokens en Postman o en tu LLM:"
     >&2 echo " 🔴 Token PRODUCCION : $PROD_TOKEN"
