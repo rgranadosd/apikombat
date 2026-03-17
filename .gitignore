@@ -21,6 +21,7 @@ venv/
 *.log
 run_log*.txt
 test_log*.txt
+wso2-smart-sandbox/mcp_build/
 
 # Backups & archives
 Backup_*/

@@ -20,6 +20,7 @@ Welcome to the main repository of the APIKOMBAT project. Here you will find the 
   - `requirements.txt` – Python dependencies required to run the game client (`pygame`, `pandas`, `numpy`, etc.).
   - `run_api_game.sh` and `run_game.sh` – Launch scripts (see differences below).
   - `venv/` – Local virtual environment directory (ignored by Git); create it yourself if you prefer to keep dependencies isolated.
+- `wso2-smart-sandbox/` – Automated WSO2 API Manager sandbox for turning OpenAPI files into mocked APIs plus MCP endpoints. Includes `Dockerfile`, `Dockerfile-amd64`, `docker-compose.yml`, and sample OAS files under `src/openapi/`.
 - `LICENSE` – Project license.
 
 ## Getting started
@@ -51,6 +52,7 @@ Welcome to the main repository of the APIKOMBAT project. Here you will find the 
 - Check `doc/official_rules.md` to understand the tournament rules and scoring model.
 - Review `doc/how_to_play.md` and `doc/cards.md` to master the gameplay flow and the role of each card.
 - See `virus-game/api-card-game/README.md` for technical notes on the MTG engine adaptation.
+- See `wso2-smart-sandbox/README.md` for the API sandbox workflow and Docker-based setup.
 
 Keep this README updated whenever new modules, assets, or documentation land in the repository.
 
