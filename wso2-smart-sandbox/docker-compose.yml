@@ -1,0 +1,21 @@
+services:
+  apim:
+    image: wso2-apim:4.6.0-jdk21
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-arm64
+    ports:
+      - "9443:9443"
+      - "9763:9763"
+      - "8243:8243"
+      - "8280:8280"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9443"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      # Mapeamos la ruta exacta relativa al docker-compose.yml
+      - ./src/openapi:/opt/src/openapi

@@ -1,0 +1,363 @@
+openapi: 3.0.1
+info:
+  title: EduCore API - K-12 Institution Management
+  description: Comprehensive API for managing Primary and Secondary Educational Institutions. Includes modules for academics, enrollment, attendance, and grading.
+  version: 1.0.0
+  contact:
+    name: API Architecture Team
+    email: api@educore.edu
+servers:
+  - url: https://api.educore.edu/v1
+    description: Production Environment
+  - url: https://sandbox.educore.edu/v1
+    description: Sandbox Environment
+
+paths:
+  /students:
+    get:
+      summary: List students
+      description: Retrieve a list of all enrolled students with optional filtering.
+      parameters:
+        - in: query
+          name: academicLevel
+          schema:
+            type: string
+            enum: [PRIMARY, SECONDARY]
+          description: Filter students by academic level.
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [ACTIVE, INACTIVE, GRADUATED]
+      responses:
+        '200':
+          description: A list of students.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Student'
+              example:
+                data:
+                  - id: "stu_1001"
+                    firstName: "Emma"
+                    lastName: "Smith"
+                    dateOfBirth: "2016-04-10"
+                    academicLevel: "PRIMARY"
+                    gradeYear: "4"
+                    status: "ACTIVE"
+                  - id: "stu_2005"
+                    firstName: "Liam"
+                    lastName: "Johnson"
+                    dateOfBirth: "2010-08-22"
+                    academicLevel: "SECONDARY"
+                    gradeYear: "10"
+                    status: "ACTIVE"
+                  - id: "stu_1002"
+                    firstName: "Sophia"
+                    lastName: "Martinez"
+                    dateOfBirth: "2015-11-03"
+                    academicLevel: "PRIMARY"
+                    gradeYear: "5"
+                    status: "ACTIVE"
+                  - id: "stu_2010"
+                    firstName: "Mason"
+                    lastName: "Davis"
+                    dateOfBirth: "2008-01-14"
+                    academicLevel: "SECONDARY"
+                    gradeYear: "12"
+                    status: "GRADUATED"
+                  - id: "stu_1003"
+                    firstName: "Isabella"
+                    lastName: "Garcia"
+                    dateOfBirth: "2017-06-25"
+                    academicLevel: "PRIMARY"
+                    gradeYear: "3"
+                    status: "INACTIVE"
+    post:
+      summary: Register a new student
+      description: Create a new student profile in the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentInput'
+            example:
+              firstName: "Noah"
+              lastName: "Williams"
+              dateOfBirth: "2017-02-15"
+              academicLevel: "PRIMARY"
+              gradeYear: "3"
+      responses:
+        '201':
+          description: Student created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+              example:
+                id: "stu_9948"
+                firstName: "Noah"
+                lastName: "Williams"
+                dateOfBirth: "2017-02-15"
+                academicLevel: "PRIMARY"
+                gradeYear: "3"
+                status: "ACTIVE"
+        '400':
+          description: Validation error in the payload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: "VALIDATION_ERROR"
+                message: "The field 'dateOfBirth' is required."
+
+  /courses:
+    post:
+      summary: Create a new course instance
+      description: Define a new course for a specific term and subject.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CourseInput'
+            example:
+              subjectId: "sub_math_01"
+              name: "Algebra II - Section A"
+              teacherId: "tch_502"
+              academicTerm: "2026_FALL"
+              capacity: 25
+      responses:
+        '201':
+          description: Course created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  courseId:
+                    type: string
+              example:
+                message: "Course successfully created"
+                courseId: "crs_math_101"
+
+  /courses/{courseId}/attendance:
+    post:
+      summary: Submit daily attendance
+      description: Record attendance for multiple students in a specific course on a given date.
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceInput'
+            example:
+              date: "2026-02-24"
+              records:
+                - studentId: "stu_1001"
+                  status: "PRESENT"
+                - studentId: "stu_1002"
+                  status: "ABSENT"
+                  remarks: "Medical note provided"
+      responses:
+        '200':
+          description: Attendance recorded successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  recordsProcessed:
+                    type: integer
+              example:
+                status: "SUCCESS"
+                recordsProcessed: 2
+
+  /courses/{courseId}/grades:
+    post:
+      summary: Submit grades
+      description: Record grades for assignments, mid-terms, or final exams.
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeInput'
+            example:
+              assessmentName: "Mid-Term Exam"
+              assessmentType: "EXAM"
+              maxScore: 100
+              grades:
+                - studentId: "stu_2005"
+                  score: 85.5
+                - studentId: "stu_2006"
+                  score: 92.0
+      responses:
+        '200':
+          description: Grades successfully saved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  gradesUpdated:
+                    type: integer
+              example:
+                status: "SUCCESS"
+                gradesUpdated: 2
+
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        academicLevel:
+          type: string
+          enum: [PRIMARY, SECONDARY]
+        gradeYear:
+          type: string
+        status:
+          type: string
+          enum: [ACTIVE, INACTIVE, GRADUATED]
+        contactEmail:
+          type: string
+          format: email
+
+    StudentInput:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - dateOfBirth
+        - academicLevel
+        - gradeYear
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        academicLevel:
+          type: string
+          enum: [PRIMARY, SECONDARY]
+        gradeYear:
+          type: string
+        contactEmail:
+          type: string
+
+    CourseInput:
+      type: object
+      required:
+        - subjectId
+        - name
+        - teacherId
+        - academicTerm
+      properties:
+        subjectId:
+          type: string
+        name:
+          type: string
+        teacherId:
+          type: string
+        academicTerm:
+          type: string
+        capacity:
+          type: integer
+
+    AttendanceInput:
+      type: object
+      required:
+        - date
+        - records
+      properties:
+        date:
+          type: string
+          format: date
+        records:
+          type: array
+          items:
+            type: object
+            required:
+              - studentId
+              - status
+            properties:
+              studentId:
+                type: string
+              status:
+                type: string
+                enum: [PRESENT, ABSENT, LATE, EXCUSED]
+              remarks:
+                type: string
+
+    GradeInput:
+      type: object
+      required:
+        - assessmentName
+        - assessmentType
+        - grades
+      properties:
+        assessmentName:
+          type: string
+        assessmentType:
+          type: string
+          enum: [HOMEWORK, QUIZ, EXAM, PROJECT, FINAL]
+        maxScore:
+          type: number
+        grades:
+          type: array
+          items:
+            type: object
+            required:
+              - studentId
+              - score
+            properties:
+              studentId:
+                type: string
+              score:
+                type: number
+              feedback:
+                type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
